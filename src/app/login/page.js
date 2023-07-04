@@ -2,7 +2,7 @@
 
 //? CSS
 // import './styles/home/styles.css';
-import './rootStyles.css'
+// import './rootStyles.css'
 
 //? REACT
 import React from 'react';
@@ -14,7 +14,7 @@ import Image from 'next/image';
 import { Box, Button, Divider, TextField, Typography } from '@mui/material';
 
 //? ICONS
-import bugIcon from '../../public/assets/icons/icons8-bug-60.png';
+import bugIcon from '../../../public/assets/icons/icons8-bug-60.png';
 
 const Home = () => {
   return (
@@ -27,30 +27,26 @@ const Home = () => {
           <Divider />
 
           <Typography variant='h2' sx={{fontSize: 35, textAlign: 'center', marginTop: 2}}>
-            Create Account
+            Welcome Back
           </Typography>
 
           <Box component={'form'}>
             <Typography variant="h6" sx={{ fontWeight: 600, textAlign: 'left'}}>
-              Email *
+              Email
             </Typography>
             <TextField required variant='outlined' size='small' sx={{width: '100%', backgroundColor: '#dadee3'}} />
             <Typography variant="h6" sx={{ fontWeight: 600, textAlign: 'left'}}>
-              Password *
+              Password
             </Typography>
             <TextField required variant='outlined' size='small' sx={{width: '100%', backgroundColor: '#dadee3'}} />
-            <Typography variant="h6" sx={{ fontWeight: 600, textAlign: 'left'}}>
-              Confirm Password
-            </Typography>
-            <TextField required variant='outlined' size='small' sx={{width: '100%', backgroundColor: '#dadee3'}} />
-            <Button type='submit' variant='contained' size='large' onClick={() => alert('submitted')} sx={{marginTop: 2, width: '100%'}}>
-              Sign Up
-            </Button>
           </Box>
+          <Button variant='contained' size='large' onClick={() => alert('submitted')} sx={{marginTop: 2, width: '100%'}}>
+            Sign In
+          </Button>
           <Typography sx={{marginTop: 1}}>
-                Already have an account?{" "}
-                <a href="/login" style={{ color: "#0091E2", textDecoration: "none", fontWeight: 600 }}>
-                  Sign In
+                Need an account?{" "}
+                <a href="/" style={{ color: "#0091E2", textDecoration: "none", fontWeight: 600 }}>
+                  Sign Up
                 </a>
           </Typography>
           <Typography sx={{marginTop: 1}}>
