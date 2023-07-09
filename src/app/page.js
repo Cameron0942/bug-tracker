@@ -1,5 +1,8 @@
 'use client';
 
+//? AXIOS
+import axios from 'axios';
+
 //? CSS
 import './rootStyles.css';
 
@@ -8,9 +11,11 @@ import React, { useState } from 'react';
 
 //? NEXT.JS
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 //? MATERIAL UI
 import { Box, Button, Divider, TextField, Typography } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 
 //? FONT AWESOME COMPONENTS
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,6 +28,9 @@ import bugIcon from '../../public/assets/icons/icons8-bug-60.png';
 import emailValidator from '@/validators/validateEmail';
 
 const Home = () => {
+  const router = useRouter();
+
+  //? page variables
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState(false);
   const [emailHelperText, setEmailHelperText] = useState('');
@@ -31,6 +39,7 @@ const Home = () => {
   const [confirmPasswordHelperText, setConfirmPasswordHelperText] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [passwordShown, setPasswordShown] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const eye = <FontAwesomeIcon icon={faEye} />;
   const eyeClosed = <FontAwesomeIcon icon={faEyeSlash} />;
@@ -64,16 +73,40 @@ const Home = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     if (!emailValidator(email)) {
       setEmailError(true);
       setEmailHelperText('Please enter a valid email');
+      setLoading(false);
       return;
     }
 
     if (password !== confirmPassword) {
       setConfirmPasswordHelperText('Passwords must match');
+      setLoading(false);
       setConfirmPasswordError(true);
+      return;
+    }
+
+    const payload = {
+      email: email,
+      password: password,
+    }
+    
+    try {
+      let register = await axios.post('http://localhost:5000', payload);
+      let result = register;
+      
+      if (result.status === 201) {
+        window.location.replace('/dashboard');
+      }
+      setLoading(false);
+      setConfirmPasswordError(false);
+    }
+    catch(e){
+      console.log("Error submitting", e);
+      setLoading(false);
     }
 
   };
@@ -162,9 +195,12 @@ const Home = () => {
                 )
               }}
             />
-            <Button type='submit' variant='contained' size='large' sx={{ marginTop: 2, width: '100%' }}>
-              Sign Up
-            </Button>
+            {
+            loading ? 
+            <CircularProgress sx={{margin: '0 auto', display: 'block', marginTop: '1em', color: '#1976d2'}} />
+             :
+            <Button type='submit' variant='contained' size='large' sx={{ marginTop: 2, width: '100%' }}>Sign Up</Button>
+            }
           </Box>
           <Typography sx={{ marginTop: 1 }}>
             Already have an account?{' '}
