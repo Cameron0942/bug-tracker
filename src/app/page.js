@@ -7,7 +7,7 @@ import axios from 'axios';
 import './rootStyles.css';
 
 //? REACT
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 //? NEXT.JS
 import Image from 'next/image';
@@ -95,21 +95,42 @@ const Home = () => {
     }
     
     try {
-      let register = await axios.post('http://localhost:5000', payload);
+      let register = await axios.post('http://localhost:3000/api/register', payload);
       let result = register;
+      console.log("RESPONSE", result)
       
       if (result.status === 201) {
+        sessionStorage.setItem('jwt', result.data.jwt);
         window.location.replace('/dashboard');
       }
-      setLoading(false);
+      
       setConfirmPasswordError(false);
     }
     catch(e){
-      console.log("Error submitting", e);
+      console.log("Error submitting", e.response.data);
+      setEmailHelperText(e.response.data.message);
+      setEmailError(true);
       setLoading(false);
     }
-
   };
+
+  //*Clear session storage on page load
+  useEffect(() => {
+    sessionStorage.clear();
+  }, []);
+  
+  useEffect(() => {
+    const connectToMongo = async () => {
+      try {
+        await axios.get('http://localhost:3000/api/register');
+      } catch (error) {
+        console.error('Error connecting to MongoDB:', error);
+      }
+    };
+
+    connectToMongo();
+  }, []);
+
 
   return (
     <>
@@ -175,7 +196,7 @@ const Home = () => {
                 )
               }}
             />
-            <Typography variant='h6' sx={{ fontWeight: 600, textAlign: 'left' }}>
+            <Typography variant='h6' sx={{ fontWeight: 600, textAlign: 'left',}}>
               Confirm Password
             </Typography>
             <TextField
